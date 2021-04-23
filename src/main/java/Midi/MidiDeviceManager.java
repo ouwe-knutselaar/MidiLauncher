@@ -2,22 +2,27 @@ package Midi;
 
 import javax.sound.midi.MidiDevice;
 import javax.sound.midi.MidiSystem;
+import javax.sound.midi.MidiUnavailableException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class MidiDeviceManager {
 
+    private static MidiDevice.Info[] midiDevices;
+    
+    private Map<String,MidiDevice> midiDeviceList = new HashMap<>();
     private static MidiDeviceManager Instance = null;
-    private MidiDevice.Info[] midiDevices;
 
-
-    private MidiDeviceManager(){
-        midiDevices =MidiSystem.getMidiDeviceInfo();
+    private MidiDeviceManager() throws MidiUnavailableException {
+        midiDevices = MidiSystem.getMidiDeviceInfo();
+        for(MidiDevice.Info midiDevInfo : midiDevices)midiDeviceList.put(midiDevInfo.getName(),MidiSystem.getMidiDevice(midiDevInfo));
 
     }
 
-    public static MidiDeviceManager getInstance(){
+    public static MidiDeviceManager getInstance() throws MidiUnavailableException {
         if(Instance == null)Instance = new MidiDeviceManager();
         return Instance;
     }
@@ -27,6 +32,6 @@ public class MidiDeviceManager {
     }
 
     public MidiDevice getMidiDeviceByName(String name){
-        return null;
+        return midiDeviceList.get(name);
     }
 }
