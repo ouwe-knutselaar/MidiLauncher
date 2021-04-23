@@ -1,11 +1,24 @@
 import Midi.MidiDeviceManager;
 import Midi.MidiEventReactor;
+import audio.SampleManager;
+import audio.WaveSample;
 
 import javax.sound.midi.*;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
+import java.io.IOException;
 
 public class Test {
 
-    public static void main(String [] argv) throws MidiUnavailableException {
+    public static void main(String [] argv) throws MidiUnavailableException, IOException, UnsupportedAudioFileException, LineUnavailableException {
+
+        /*WaveSample wv = new WaveSample();
+        wv.LoadSample("D:\\erwin\\c5.wav");
+        wv.playSample();
+*/
+        SampleManager sm = SampleManager.getInstance();
+        sm.addSample("D:\\erwin\\bd1.wav",60);
+        sm.addSample("D:\\erwin\\sn1.wav",62);
 
         MidiDeviceManager test = MidiDeviceManager.getInstance();
 
@@ -27,6 +40,10 @@ public class Test {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+    }
+
+    public void midi(){
 
     }
 

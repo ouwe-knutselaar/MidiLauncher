@@ -13,8 +13,8 @@ public class MidiDeviceManager {
 
     private static MidiDevice.Info[] midiDevices;
     
-    private Map<String,MidiDevice> midiDeviceList = new HashMap<>();
-    private static MidiDeviceManager Instance = null;
+    private final Map<String,MidiDevice> midiDeviceList = new HashMap<>();
+    private static MidiDeviceManager instance = null;
 
     private MidiDeviceManager() throws MidiUnavailableException {
         midiDevices = MidiSystem.getMidiDeviceInfo();
@@ -23,12 +23,12 @@ public class MidiDeviceManager {
     }
 
     public static MidiDeviceManager getInstance() throws MidiUnavailableException {
-        if(Instance == null)Instance = new MidiDeviceManager();
-        return Instance;
+        if(instance == null) instance = new MidiDeviceManager();
+        return instance;
     }
 
     public List<String> getNamesOfMidiDevices(){
-       return Arrays.stream(midiDevices).map(device -> device.getName()).collect(Collectors.toList());
+       return Arrays.stream(midiDevices).map(MidiDevice.Info::getName).collect(Collectors.toList());
     }
 
     public MidiDevice getMidiDeviceByName(String name){
