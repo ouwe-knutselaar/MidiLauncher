@@ -20,11 +20,12 @@ public class Settings {
     private String midiDeviceName = "none";
     private String currentDrumKitName = "none";
     private String sampleStore;
+    private String tcpPort = "3030";
 
     List<String> drumKits = new LinkedList<>();
     List<String> midiDevices = new LinkedList<>();
 
-    private Settings() throws IOException, MidiUnavailableException {
+    private Settings() {
 
     }
 
@@ -36,6 +37,7 @@ public class Settings {
         log.debug("configDirectory=" + configDirectory);
         log.debug("configFile=" + configFile);
         log.debug("sampleStore=" + sampleStore);
+        log.debug("tcpPort=" + tcpPort);
 
         if (Files.notExists(Paths.get(configDirectory))) Files.createDirectory(Paths.get(configDirectory));
         if (Files.notExists(Paths.get(sampleStore))) Files.createDirectory(Paths.get(sampleStore));
@@ -57,9 +59,11 @@ public class Settings {
         if (prop.containsKey("midiDeviceName")) midiDeviceName = prop.getProperty("midiDeviceName");
         if (prop.containsKey("sampleStore")) sampleStore = prop.getProperty("sampleStore");
         if (prop.containsKey("drumKitName")) currentDrumKitName = prop.getProperty("drumKitName");
+        if (prop.containsKey("tcpPort")) tcpPort = prop.getProperty("tcpPort");
         log.debug("midiDeviceName is :" + midiDeviceName);
         log.debug("sampleStore is :" + sampleStore);
         log.debug("drumKitName is :" + currentDrumKitName);
+        log.debug("tcpPort is " + tcpPort);
 
         inputStream.close();
     }
@@ -81,6 +85,7 @@ public class Settings {
             bos.write(("midiDeviceName=" + midiDeviceName+System.lineSeparator()).getBytes());
             bos.write(("sampleStore=" + sampleStore+System.lineSeparator()).getBytes());
             bos.write(("drumKitName=" + currentDrumKitName+System.lineSeparator()).getBytes());
+            bos.write(("tcpPort =" + tcpPort+System.lineSeparator()).getBytes());
             bos.close();
 
         } catch (IOException e) {
@@ -126,5 +131,9 @@ public class Settings {
         log.debug("Set current drumkit to " + drumKitName);
         this.currentDrumKitName = drumKitName;
         recreateAndFile(configFile);
+    }
+
+    public int getIntTcpPort(){
+        return Integer.parseInt(tcpPort);
     }
 }

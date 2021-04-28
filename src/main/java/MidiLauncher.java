@@ -9,7 +9,7 @@ import java.io.IOException;
 
 public class MidiLauncher {
 
-    private static Logger log = Logger.getLogger("MidiLancher");
+    private static final Logger log = Logger.getLogger("MidiLancher");
     private SampleManager sampleManager;
     private Settings settings;
 
@@ -64,9 +64,9 @@ public class MidiLauncher {
         Thread telnetServerThread = new Thread(telnetServer);
         telnetServerThread.start();
 
+        settings.getDrumKits().forEach(drumKit -> log.info("available drum :"+drumKit));
         log.info("Current drumikit "+settings.getCurrentDrumKitName());
 
-        settings.getDrumKits().forEach(drumKit -> log.info("available drum :"+drumKit));
         sampleManager.loadFromSampleDirectory(settings.getSampleStore()+"/"+settings.getCurrentDrumKitName());
 
 
@@ -79,7 +79,5 @@ public class MidiLauncher {
             }
         }
     }
-
-
 
 }

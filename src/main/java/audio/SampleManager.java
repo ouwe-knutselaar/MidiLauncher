@@ -2,16 +2,9 @@ package audio;
 
 import directory.DirTools;
 import org.apache.log4j.Logger;
-import settings.Settings;
-
-import javax.sound.midi.MidiUnavailableException;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.IOException;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +12,7 @@ import java.util.stream.Collectors;
 
 public class SampleManager {
 
-    private Logger log = Logger.getLogger(this.getClass().getName());
+    private final Logger log = Logger.getLogger(this.getClass().getName());
     private static final SampleManager Instance = new SampleManager();
     private final Map<Integer,WaveSample> sampleList = new HashMap<>();
 
@@ -31,7 +24,7 @@ public class SampleManager {
         return Instance;
     }
 
-    public void loadFromSampleDirectory(String sampleDirectory) throws IOException, MidiUnavailableException {
+    public void loadFromSampleDirectory(String sampleDirectory) {
         log.debug("load drumkit from "+sampleDirectory);
         sampleList.clear();     // clear the list
         List<String> dirList = DirTools.getListOfSubdirs(sampleDirectory);
@@ -44,7 +37,7 @@ public class SampleManager {
                 log.debug("load sample from "+sampleFile);
                 addSample(sampleFile,note);
             }catch (NumberFormatException e){
-                continue;
+                log.error("invalid note in "+sampleDirectory);
             }
 
         }
@@ -74,7 +67,7 @@ public class SampleManager {
         return sampleList
                 .values()
                 .stream()
-                .map(waveSample -> waveSample.getName())
+                .map(WaveSample::getName)
                 .collect(Collectors.toList());
     }
 
