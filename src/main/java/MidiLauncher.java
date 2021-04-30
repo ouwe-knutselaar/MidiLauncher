@@ -1,10 +1,9 @@
+import Midi.MidiEventmanager;
 import audio.SampleManager;
 import org.apache.log4j.Logger;
 import settings.Settings;
 import telnet.TelnetServer;
-
 import javax.sound.midi.MidiUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.IOException;
 
 public class MidiLauncher {
@@ -22,9 +21,9 @@ public class MidiLauncher {
 
         MidiLauncher midiLauncher = new MidiLauncher(argv[0]);
         try {
-            midiLauncher.init();
+
             midiLauncher.start();
-        } catch (MidiUnavailableException | IOException | UnsupportedAudioFileException e) {
+        } catch (MidiUnavailableException | IOException e) {
             e.printStackTrace();
             System.exit(1);
         }
@@ -43,21 +42,6 @@ public class MidiLauncher {
         }
     }
 
-
-    private void init() throws MidiUnavailableException, IOException, UnsupportedAudioFileException {
-
-
-
-        /*MidiDeviceManager test = MidiDeviceManager.getInstance();
-        test.getNamesOfMidiDevices().forEach(System.out::println);
-        MidiDevice md = test.getMidiDeviceByName("MIDIIN2 (SAMSON Graphite 25)");
-        md.open();
-        Transmitter tm = md.getTransmitter();
-        md.open();
-        MidiEventReactor mer = new MidiEventReactor();
-        tm.setReceiver(mer.getReceiver());*/
-    }
-
     private void start() throws IOException, MidiUnavailableException {
 
         TelnetServer telnetServer = new TelnetServer();
@@ -68,7 +52,7 @@ public class MidiLauncher {
         log.info("Current drumikit "+settings.getCurrentDrumKitName());
 
         sampleManager.loadFromSampleDirectory(settings.getSampleStore()+"/"+settings.getCurrentDrumKitName());
-
+        MidiEventmanager midiEventmanager = new MidiEventmanager();
 
         while(true){
             log.info("Start the loop");

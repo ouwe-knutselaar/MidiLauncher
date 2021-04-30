@@ -5,6 +5,7 @@ import org.apache.log4j.Logger;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -69,6 +70,12 @@ public class SampleManager {
                 .stream()
                 .map(WaveSample::getName)
                 .collect(Collectors.toList());
+    }
+
+    public Map<Integer,String> getSamplesAndNotes(){
+        Map<Integer,String> workList = new HashMap<>();
+        sampleList.forEach((K,V) -> workList.put(K, Paths.get(V.getName()).getFileName().toString()));
+        return workList;
     }
 
     public static String getNoteFromMidiNumber(int midiNote){

@@ -68,6 +68,7 @@ public class TelnetServer implements Runnable {
             pw.println(" 1 Select midi device");
             pw.println(" 2 Select drumkit");
             pw.println(" 3 Show overview");
+            pw.println(" 4 Play sample from list");
             pw.println(" q quit");
             pw.println("choice:>");
             String response = bf.readLine();
@@ -78,8 +79,27 @@ public class TelnetServer implements Runnable {
                 sampleManager.loadFromSampleDirectory(settings.getSampleStore() + "/" + settings.getCurrentDrumKitName());
             }
             if (response.equals("3")) showOverview();
+            if (response.equals("4")) selectSampleToPlay();
         }
         pw.println("Session ended");
+    }
+
+    private void selectSampleToPlay() throws IOException {
+        boolean loop = true;
+        while(loop) {
+            pw.println("");
+            sampleManager.getSamplesAndNotes().forEach((K, V) -> pw.println(" " + K + "  " + V));
+            pw.println(" q quit");
+            pw.println("choice:>");
+            String response = bf.readLine();
+            if (response.equals("q")) loop = false;
+            try {
+                sampleManager.playSample(Integer.parseInt(response));
+            }catch(NumberFormatException e){
+                pw.println("invalid number");
+            }
+        }
+
     }
 
     private void showOverview() {

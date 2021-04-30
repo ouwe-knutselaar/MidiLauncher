@@ -18,7 +18,7 @@ public class MidiDeviceManager {
     private static MidiDeviceManager instance = null;
 
     private MidiDeviceManager() throws MidiUnavailableException {
-        log.debug("Load midi manager");
+        log.debug("Load MidiDeviceManager()");
         midiDevices = MidiSystem.getMidiDeviceInfo();
         for(MidiDevice.Info midiDevInfo : midiDevices)midiDeviceList.put(midiDevInfo.getName(),MidiSystem.getMidiDevice(midiDevInfo));
 

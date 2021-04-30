@@ -1,21 +1,20 @@
 package Midi;
 
 import audio.SampleManager;
-import audio.WaveSample;
+import org.apache.log4j.Logger;
 
 import javax.sound.midi.*;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
-import java.io.IOException;
 import java.util.List;
 
 public class MidiEventReactor implements MidiDevice {
 
     private boolean isOpen = false;
     private final SampleManager sm;
+    private final Logger log = Logger.getLogger(this.getClass().getName());
 
 
-    public MidiEventReactor() throws IOException, UnsupportedAudioFileException {
+    public MidiEventReactor() {
+        log.info("Load MidiEventReactor()");
         sm = SampleManager.getInstance();
     }
 
@@ -27,11 +26,6 @@ public class MidiEventReactor implements MidiDevice {
             ShortMessage sms = (ShortMessage) message;
             if (sms.getCommand() == 144) {
                 sm.playSample(sms.getData1());
-
-                //System.out.println("channel = " + sms.getChannel());
-                //System.out.println("command = " + sms.getCommand());
-                //System.out.println("data1   = " + sms.getData1());
-                //System.out.println("data2   = " + sms.getData2());
             }
         }
 
@@ -47,7 +41,7 @@ public class MidiEventReactor implements MidiDevice {
     }
 
     @Override
-    public void open() throws MidiUnavailableException {
+    public void open() {
         isOpen = true;
     }
 
@@ -77,7 +71,7 @@ public class MidiEventReactor implements MidiDevice {
     }
 
     @Override
-    public Receiver getReceiver() throws MidiUnavailableException {
+    public Receiver getReceiver()  {
         return rc;
     }
 
@@ -87,7 +81,7 @@ public class MidiEventReactor implements MidiDevice {
     }
 
     @Override
-    public Transmitter getTransmitter() throws MidiUnavailableException {
+    public Transmitter getTransmitter() {
         return null;
     }
 
