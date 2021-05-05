@@ -2,7 +2,6 @@ package telnet;
 
 
 import Midi.MidiDeviceManager;
-import Midi.MidiEventmanager;
 import audio.SampleManager;
 import org.apache.log4j.Logger;
 import settings.Settings;
@@ -12,26 +11,27 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-public class TelnetServer implements Runnable {
+public class TelnetServerTest implements Runnable {
 
     private final Logger log = Logger.getLogger(this.getClass().getName());
     private boolean loop = true;
     ServerSocket serverSocket;
     Socket clientSocket;
-    BufferedReader bf;
+    //BufferedReader bf;
+    InputStreamReader bf;
     PrintWriter pw;
     Settings settings;
     MidiDeviceManager midiDeviceManager;
-    MidiEventmanager midiEventmanager;
     SampleManager sampleManager;
 
-    public TelnetServer() throws IOException, MidiUnavailableException {
+    public TelnetServerTest() throws IOException, MidiUnavailableException {
         settings = Settings.getInstance();
         midiDeviceManager = MidiDeviceManager.getInstance();
         sampleManager = SampleManager.getInstance();
-        midiEventmanager = MidiEventmanager.getInstance();
         log.info("Start telnet server at port "+settings.getIntTcpPort());
         serverSocket = new ServerSocket(settings.getIntTcpPort());
     }
@@ -55,10 +55,20 @@ public class TelnetServer implements Runnable {
         log.info("New session from " + clientSocket.getInetAddress().getHostAddress());
         // just for testing
         InputStreamReader isr = new InputStreamReader(clientSocket.getInputStream());
+        DataInputStream dis = new DataInputStream(clientSocket.getInputStream());
 
-        bf = new BufferedReader(isr);
+        bf = isr;
         pw = new PrintWriter(clientSocket.getOutputStream(), true);
-        MainScreen();
+        boolean loop = true;
+        while(loop) {
+            pw.println("");
+            pw.println("test input");
+            pw.println(" q quit");
+            pw.println("choice:>");
+            int response = dis.readByte();
+            //if (response.equals("q")) loop = false;
+            System.out.print(response+" ");
+        }
         pw.close();
         bf.close();
         clientSocket.close();
@@ -69,18 +79,17 @@ public class TelnetServer implements Runnable {
         boolean loop = true;
         while(loop) {
             pw.println("");
-            pw.println("MidiLauncher");
+            pw.println("MidiLauncher TEST TEST");
             pw.println("Midi device '" + settings.getMidiDeviceName() + "'");
             pw.println("Drum kit    '" + settings.getCurrentDrumKitName() + "'");
             pw.println(" 1 Select midi device");
             pw.println(" 2 Select drumkit");
             pw.println(" 3 Show overview");
             pw.println(" 4 Play sample from list");
-            pw.println(" d drumloop");
             pw.println(" 0 test");
             pw.println(" q quit");
             pw.println("choice:>");
-            String response = bf.readLine();
+            String response = ""+bf.read();
             if (response.equals("q")) loop = false;
             if (response.equals("1")) settings.setMidiDeviceName(selectMidiDevice());
             if (response.equals("2")) {
@@ -89,7 +98,6 @@ public class TelnetServer implements Runnable {
             }
             if (response.equals("3")) showOverview();
             if (response.equals("4")) selectSampleToPlay();
-            if (response.equals("d")) drumSequencer();
             if (response.equals("0")) testenv();
         }
         pw.println("Session ended");
@@ -102,9 +110,9 @@ public class TelnetServer implements Runnable {
             pw.println("test input");
             pw.println(" q quit");
             pw.println("choice:>");
-            String response = ""+bf.read();
-            if (response.equals("q")) loop = false;
-            System.out.println(response);
+            int response = bf.read();
+            //if (response.equals("q")) loop = false;
+            System.out.print(response+" ");
         }
 
     }
@@ -116,7 +124,7 @@ public class TelnetServer implements Runnable {
             sampleManager.getSamplesAndNotes().forEach((K, V) -> pw.println(" " + K + "  " + V));
             pw.println(" q quit");
             pw.println("choice:>");
-            String response = bf.readLine();
+            String response = ""+bf.read();
             if (response.equals("q")) loop = false;
             try {
                 sampleManager.playSample(Integer.parseInt(response));
@@ -133,7 +141,6 @@ public class TelnetServer implements Runnable {
         pw.println("Used samples:");
         sampleManager.getSamples().stream().map(fullPath -> Paths.get(fullPath).getFileName()).forEach(pw::println);
         pw.println("current midi device is:"+settings.getMidiDeviceName());
-        pw.println("midi event manager status:"+midiEventmanager.getStatus());
     }
 
     private String selectDrumKit() throws IOException {
@@ -145,7 +152,7 @@ public class TelnetServer implements Runnable {
             workMap.forEach((K, V) -> pw.printf(" %s %s%s", K, V, System.lineSeparator()));
             pw.println(" q quit session");
             pw.println("choice:>");
-            String response = bf.readLine();
+            String response = ""+bf.read();
             if (response.equals("q")) return settings.getCurrentDrumKitName();
             if (workMap.containsKey(response)) return workMap.get(response);
             pw.println("invalid choice " + response);
@@ -161,7 +168,7 @@ public class TelnetServer implements Runnable {
             workMap.forEach((K, V) -> pw.printf(" %s %s%s", K, V, System.lineSeparator()));
             pw.println(" q quit");
             pw.println("choice:>");
-            String response = bf.readLine();
+            String response = ""+bf.read();
             if (response.equals("q")) return settings.getMidiDeviceName();
             if (workMap.containsKey(response)) return workMap.get(response);
             pw.println("invalid choice " + response);
@@ -174,16 +181,6 @@ public class TelnetServer implements Runnable {
             workMap.put("" + tel, inputList.get(tel));
         }
         return workMap;
-    }
-
-    private void drumSequencer() {
-        while(true){
-            pw.println("sequencer");
-            pw.println("|       |       |       |       |");
-            pw.println("+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+");
-            pw.println("+ + + + + + + + + + + + + + + + +");
-        }
-
     }
 
 }

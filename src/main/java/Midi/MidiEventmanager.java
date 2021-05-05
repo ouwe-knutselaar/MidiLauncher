@@ -11,18 +11,33 @@ import java.io.IOException;
 public class MidiEventmanager {
 
     private final Logger log = Logger.getLogger(this.getClass().getName());
+    private String status = "uninitialized";
+    private static MidiEventmanager instance;
 
-    public MidiEventmanager() throws IOException, MidiUnavailableException {
+    private MidiEventmanager() throws IOException, MidiUnavailableException {
         log.info("Start MidiEventmanager()");
         MidiDeviceManager midiDeviceManager = MidiDeviceManager.getInstance();
         Settings settings = Settings.getInstance();
         MidiDevice midiDevice = midiDeviceManager.getMidiDeviceByName(settings.getMidiDeviceName());
         midiDevice.open();
-        Transmitter transmitter = midiDevice.getTransmitter();
-        midiDevice.open();
-        MidiEventReactor mer = new MidiEventReactor();
-        transmitter.setReceiver(mer.getReceiver());
+        if(midiDevice.getMaxTransmitters()>0) {
+            Transmitter transmitter = midiDevice.getTransmitter();
+            MidiEventReactor mer = new MidiEventReactor();
+            transmitter.setReceiver(mer.getReceiver());
+            status = "initialized and ready to receive messages";
+        }else{
+            log.warn("This midi device has no tranmitter");
+            status = "unable to receive messages";
+        }
     }
 
+    public static MidiEventmanager getInstance() throws IOException, MidiUnavailableException {
+        log.info("Get instance of MidiEventmanager");
+        if(instance == null)instance = new MidiEventmanager();
+        return instance;
+    }
 
+    public String getStatus(){
+        return status;
+    }
 }
