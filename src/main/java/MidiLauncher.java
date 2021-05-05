@@ -52,7 +52,7 @@ public class MidiLauncher {
         log.info("Current drumikit "+settings.getCurrentDrumKitName());
 
         sampleManager.loadFromSampleDirectory(settings.getSampleStore()+"/"+settings.getCurrentDrumKitName());
-        MidiEventmanager midiEventmanager = new MidiEventmanager();
+        MidiEventmanager midiEventmanager = MidiEventmanager.getInstance();
 
         while(true){
             log.info("Start the loop");

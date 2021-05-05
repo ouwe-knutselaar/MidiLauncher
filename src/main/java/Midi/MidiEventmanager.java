@@ -10,7 +10,7 @@ import java.io.IOException;
 
 public class MidiEventmanager {
 
-    private final Logger log = Logger.getLogger(this.getClass().getName());
+    private static final Logger log = Logger.getLogger(MidiEventmanager.class.getClass().getName());
     private String status = "uninitialized";
     private static MidiEventmanager instance;
 
