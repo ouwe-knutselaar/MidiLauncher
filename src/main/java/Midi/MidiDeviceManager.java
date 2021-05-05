@@ -4,10 +4,7 @@ import org.apache.log4j.Logger;
 import javax.sound.midi.MidiDevice;
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.MidiUnavailableException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class MidiDeviceManager {
@@ -33,7 +30,7 @@ public class MidiDeviceManager {
        return Arrays.stream(midiDevices).map(MidiDevice.Info::getName).collect(Collectors.toList());
     }
 
-    public MidiDevice getMidiDeviceByName(String name){
-        return midiDeviceList.get(name);
+    public Optional<MidiDevice> getMidiDeviceByName(String name){
+        return Optional.ofNullable(midiDeviceList.get(name));
     }
 }

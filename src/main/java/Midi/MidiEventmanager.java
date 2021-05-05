@@ -7,6 +7,7 @@ import javax.sound.midi.MidiDevice;
 import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.Transmitter;
 import java.io.IOException;
+import java.util.Optional;
 
 public class MidiEventmanager {
 
@@ -18,26 +19,28 @@ public class MidiEventmanager {
         log.info("Start MidiEventmanager()");
         MidiDeviceManager midiDeviceManager = MidiDeviceManager.getInstance();
         Settings settings = Settings.getInstance();
-        MidiDevice midiDevice = midiDeviceManager.getMidiDeviceByName(settings.getMidiDeviceName());
-        midiDevice.open();
-        if(midiDevice.getMaxTransmitters()>0) {
-            Transmitter transmitter = midiDevice.getTransmitter();
-            MidiEventReactor mer = new MidiEventReactor();
-            transmitter.setReceiver(mer.getReceiver());
-            status = "initialized and ready to receive messages";
-        }else{
-            log.warn("This midi device has no tranmitter");
-            status = "unable to receive messages";
+        Optional<MidiDevice> midiDevice = midiDeviceManager.getMidiDeviceByName(settings.getMidiDeviceName());
+        if (midiDevice.isPresent()) {
+            midiDevice.get().open();
+            if (midiDevice.get().getMaxTransmitters() > 0) {
+                Transmitter transmitter = midiDevice.get().getTransmitter();
+                MidiEventReactor mer = new MidiEventReactor();
+                transmitter.setReceiver(mer.getReceiver());
+                status = "initialized and ready to receive messages";
+            } else {
+                log.warn("This midi device has no tranmitter");
+                status = "unable to receive messages";
+            }
         }
     }
 
     public static MidiEventmanager getInstance() throws IOException, MidiUnavailableException {
         log.info("Get instance of MidiEventmanager");
-        if(instance == null)instance = new MidiEventmanager();
+        if (instance == null) instance = new MidiEventmanager();
         return instance;
     }
 
-    public String getStatus(){
+    public String getStatus() {
         return status;
     }
 }
