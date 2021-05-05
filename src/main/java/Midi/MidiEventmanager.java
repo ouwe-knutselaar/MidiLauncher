@@ -14,6 +14,7 @@ public class MidiEventmanager {
     private static final Logger log = Logger.getLogger(MidiEventmanager.class.getClass().getName());
     private String status = "uninitialized";
     private static MidiEventmanager instance;
+    private Transmitter transmitter;
 
     private MidiEventmanager() throws IOException, MidiUnavailableException {
         log.info("Start MidiEventmanager()");
@@ -23,7 +24,7 @@ public class MidiEventmanager {
         if (midiDevice.isPresent()) {
             midiDevice.get().open();
             if (midiDevice.get().getMaxTransmitters() > 0) {
-                Transmitter transmitter = midiDevice.get().getTransmitter();
+                transmitter = midiDevice.get().getTransmitter();
                 MidiEventReactor mer = new MidiEventReactor();
                 transmitter.setReceiver(mer.getReceiver());
                 status = "initialized and ready to receive messages";
@@ -42,5 +43,9 @@ public class MidiEventmanager {
 
     public String getStatus() {
         return status;
+    }
+
+    public Transmitter getTransmitter(){
+        return transmitter;
     }
 }

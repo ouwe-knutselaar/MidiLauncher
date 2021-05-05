@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 import settings.Settings;
 
 import javax.sound.midi.MidiUnavailableException;
+import javax.sound.midi.Transmitter;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -18,22 +19,26 @@ public class TelnetServer implements Runnable {
 
     private final Logger log = Logger.getLogger(this.getClass().getName());
     private boolean loop = true;
-    ServerSocket serverSocket;
-    Socket clientSocket;
-    BufferedReader bf;
-    PrintWriter pw;
-    Settings settings;
-    MidiDeviceManager midiDeviceManager;
-    MidiEventmanager midiEventmanager;
-    SampleManager sampleManager;
+    private ServerSocket serverSocket;
+    private Socket clientSocket;
+    private BufferedReader bf;
+    private PrintWriter pw;
+    private Settings settings;
+    private MidiDeviceManager midiDeviceManager;
+    private MidiEventmanager midiEventmanager;
+    private SampleManager sampleManager;
+    private MidiMonitor midiMonitor;
 
     public TelnetServer() throws IOException, MidiUnavailableException {
         settings = Settings.getInstance();
         midiDeviceManager = MidiDeviceManager.getInstance();
         sampleManager = SampleManager.getInstance();
         midiEventmanager = MidiEventmanager.getInstance();
-        log.info("Start telnet server at port "+settings.getIntTcpPort());
+        log.info("Start telnet server at port " + settings.getIntTcpPort());
         serverSocket = new ServerSocket(settings.getIntTcpPort());
+        midiMonitor = MidiMonitor.getInstance(pw);
+        Transmitter transmitter = midiEventmanager.getTransmitter();
+        if (midiMonitor != null && transmitter != null) transmitter.setReceiver(midiMonitor.getReceiver());
     }
 
 
@@ -67,7 +72,7 @@ public class TelnetServer implements Runnable {
 
     private void MainScreen() throws IOException {
         boolean loop = true;
-        while(loop) {
+        while (loop) {
             pw.println("");
             pw.println("MidiLauncher");
             pw.println("Midi device '" + settings.getMidiDeviceName() + "'");
@@ -76,6 +81,7 @@ public class TelnetServer implements Runnable {
             pw.println(" 2 Select drumkit");
             pw.println(" 3 Show overview");
             pw.println(" 4 Play sample from list");
+            pw.println(" 5 Midi monitor");
             pw.println(" d drumloop");
             pw.println(" 0 test");
             pw.println(" q quit");
@@ -89,20 +95,29 @@ public class TelnetServer implements Runnable {
             }
             if (response.equals("3")) showOverview();
             if (response.equals("4")) selectSampleToPlay();
+            if (response.equals("5")) midiMonitor();
             if (response.equals("d")) drumSequencer();
             if (response.equals("0")) testenv();
         }
         pw.println("Session ended");
     }
 
+    private void midiMonitor() throws IOException {
+        midiMonitor.enableWrite();
+        pw.println("");
+        pw.println("Midi monitor");
+        String response = "" + bf.read();
+        midiMonitor.disableWrite();
+    }
+
     private void testenv() throws IOException {
         boolean loop = true;
-        while(loop) {
+        while (loop) {
             pw.println("");
             pw.println("test input");
             pw.println(" q quit");
             pw.println("choice:>");
-            String response = ""+bf.read();
+            String response = "" + bf.read();
             if (response.equals("q")) loop = false;
             System.out.println(response);
         }
@@ -111,7 +126,7 @@ public class TelnetServer implements Runnable {
 
     private void selectSampleToPlay() throws IOException {
         boolean loop = true;
-        while(loop) {
+        while (loop) {
             pw.println("");
             sampleManager.getSamplesAndNotes().forEach((K, V) -> pw.println(" " + K + "  " + V));
             pw.println(" q quit");
@@ -120,7 +135,7 @@ public class TelnetServer implements Runnable {
             if (response.equals("q")) loop = false;
             try {
                 sampleManager.playSample(Integer.parseInt(response));
-            }catch(NumberFormatException e){
+            } catch (NumberFormatException e) {
                 pw.println("invalid number");
             }
         }
@@ -132,8 +147,8 @@ public class TelnetServer implements Runnable {
         pw.println("Current drumkit is:" + settings.getCurrentDrumKitName());
         pw.println("Used samples:");
         sampleManager.getSamples().stream().map(fullPath -> Paths.get(fullPath).getFileName()).forEach(pw::println);
-        pw.println("current midi device is:"+settings.getMidiDeviceName());
-        pw.println("midi event manager status:"+midiEventmanager.getStatus());
+        pw.println("current midi device is:" + settings.getMidiDeviceName());
+        pw.println("midi event manager status:" + midiEventmanager.getStatus());
     }
 
     private String selectDrumKit() throws IOException {
@@ -154,7 +169,7 @@ public class TelnetServer implements Runnable {
 
     private String selectMidiDevice() throws IOException {
         pw.println("");
-        pw.println("current device is "+settings.getMidiDeviceName());
+        pw.println("current device is " + settings.getMidiDeviceName());
         while (true) {
             pw.println("select midi device");
             Map<String, String> workMap = getMapOfDevices(midiDeviceManager.getNamesOfMidiDevices());
@@ -177,7 +192,7 @@ public class TelnetServer implements Runnable {
     }
 
     private void drumSequencer() {
-        while(true){
+        while (true) {
             pw.println("sequencer");
             pw.println("|       |       |       |       |");
             pw.println("+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+");
