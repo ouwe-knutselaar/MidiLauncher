@@ -1,0 +1,13 @@
+
+£
+java:S1186'"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(—µ±şıÿÿÿÿ8„ïµÿ/
+H
+java:S1168`"+Return an empty collection instead of null.(¥¹ï8„ïµÿ/
+H
+java:S1168V"+Return an empty collection instead of null.(¥¹ï8„ïµÿ/
+k
+java:S1128"IRemove this unused import 'javax.sound.sampled.LineUnavailableException'.(¢£ƒÙşÿÿÿÿ8Óœ¹ÿ/
+J
+java:S1128"-Remove this unused import 'audio.WaveSample'.(Ã±­»8Üã¶ÿ/
+]	java:S125"<This block of commented-out lines of code should be removed.(å‹¢§ùÿÿÿÿ8–àÖÿ/
+t	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(§ Öçÿÿÿÿÿ
