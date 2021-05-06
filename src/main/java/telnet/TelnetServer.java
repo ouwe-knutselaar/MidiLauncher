@@ -88,7 +88,7 @@ public class TelnetServer implements Runnable {
             pw.println("choice:>");
             String response = bf.readLine();
             if (response.equals("q")) loop = false;
-            if (response.equals("1")) settings.setMidiDeviceName(selectMidiDevice());
+            if (response.equals("1")) selectMidiDevice();
             if (response.equals("2")) {
                 settings.setCurrentDrumKitName(selectDrumKit());
                 sampleManager.loadFromSampleDirectory(settings.getSampleStore() + "/" + settings.getCurrentDrumKitName());
@@ -167,20 +167,26 @@ public class TelnetServer implements Runnable {
         }
     }
 
-    private String selectMidiDevice() throws IOException {
+    private void selectMidiDevice() throws IOException {
+        Map<String, String> workMap = getMapOfDevices(midiDeviceManager.getNamesOfMidiDevices());
+        boolean loop = true;
+        String response="";
+
         pw.println("");
         pw.println("current device is " + settings.getMidiDeviceName());
-        while (true) {
+        while (loop) {
             pw.println("select midi device");
-            Map<String, String> workMap = getMapOfDevices(midiDeviceManager.getNamesOfMidiDevices());
+
             workMap.forEach((K, V) -> pw.printf(" %s %s%s", K, V, System.lineSeparator()));
             pw.println(" q quit");
             pw.println("choice:>");
-            String response = bf.readLine();
-            if (response.equals("q")) return settings.getMidiDeviceName();
-            if (workMap.containsKey(response)) return workMap.get(response);
+            response = bf.readLine();
+            if (response.equals("q")) return;
+            if (workMap.containsKey(response)) loop = false;
             pw.println("invalid choice " + response);
         }
+        settings.setMidiDeviceName(workMap.get(response));
+        log.info("Midi device set to "+settings.getMidiDeviceName());
     }
 
     private Map<String, String> getMapOfDevices(List<String> inputList) {

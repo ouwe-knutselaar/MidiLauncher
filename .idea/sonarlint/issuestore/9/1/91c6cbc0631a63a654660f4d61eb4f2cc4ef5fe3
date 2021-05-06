@@ -1,7 +1,4 @@
 
-j	java:S100"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¼¬è“8ª¬·û/
-I
-java:S1068"'Remove this unused "aff" private field.(ıµ—Úüÿÿÿÿ8½›ñû/
-Z	java:S106"9Replace this use of System.out or System.err by a logger.(£’ä’üÿÿÿÿ8Ûµƒ€/
-t
-java:S1450"RRemove the "aff" field and declare it as a local variable in the relevant methods.(ıµ—Úüÿÿÿÿ8½›ñû/
+j	java:S100"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¼¬è“8§ŠÚì“/
+¨
+java:S1130"ŠRemove the declaration of thrown exception 'javax.sound.sampled.UnsupportedAudioFileException', as it cannot be thrown from method's body.(¼¬è“8§ŠÚì“/

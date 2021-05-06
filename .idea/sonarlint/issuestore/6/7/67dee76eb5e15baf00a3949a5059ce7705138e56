@@ -1,10 +1,11 @@
 
-Z	java:S106#"9Replace this use of System.out or System.err by a logger.(¼¶Ç”ıÿÿÿÿ8ÅöÜÿ/
 D
-java:S21893""Add an end condition to this loop.(˜ïˆÿÿÿÿÿ8é³àÿ/
-c
-java:S21426"FEither re-interrupt this method or rethrow the "InterruptedException".(ä ¹€8é³àÿ/
+java:S21899""Add an end condition to this loop.(˜ïˆÿÿÿÿÿ8æŠÚì“/
 7
-java:S1220""Move this file to a named package.8îÇ™Ò/
-j
-java:S2095,"NUse try-with-resources or close this "MidiEventReactor" in a "finally" clause.(ş¬òQ8ÅöÜÿ/
+java:S1220""Move this file to a named package.8æŠÚì“/
+a
+java:S18547"DRemove this useless assignment to local variable "midiEventmanager".(ìê±é8æŠÚì“/
+c
+java:S2142="FEither re-interrupt this method or rethrow the "InterruptedException".(ä ¹€8æŠÚì“/
+R
+java:S14817"5Remove this unused "midiEventmanager" local variable.(ìê±é8æŠÚì“/

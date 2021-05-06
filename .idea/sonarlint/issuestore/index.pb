@@ -15,3 +15,7 @@ S
 #src/main/java/audio/WaveSample.java,9\1\91c6cbc0631a63a654660f4d61eb4f2cc4ef5fe3
 V
 &src/main/java/audio/SampleManager.java,b\5\b5e1b5764b64d22757b0bcf24f568f6495ae73df
+U
+%src/main/java/directory/DirTools.java,b\a\ba1218755195fa9af681a0be04ef462396f35dd7
+T
+$src/main/java/settings/Settings.java,4\4\44a4e02b2719f7a63877d67e8a5e3fe1232818cb

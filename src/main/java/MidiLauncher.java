@@ -1,3 +1,4 @@
+import Midi.MidiDeviceManager;
 import Midi.MidiEventmanager;
 import audio.SampleManager;
 import org.apache.log4j.Logger;
@@ -11,6 +12,8 @@ public class MidiLauncher {
     private static final Logger log = Logger.getLogger("MidiLancher");
     private SampleManager sampleManager;
     private Settings settings;
+    private MidiDeviceManager midiDeviceManager;
+    private MidiEventmanager midiEventmanager;
 
     public static void main(String [] argv){
 
@@ -52,7 +55,9 @@ public class MidiLauncher {
         log.info("Current drumikit "+settings.getCurrentDrumKitName());
 
         sampleManager.loadFromSampleDirectory(settings.getSampleStore()+"/"+settings.getCurrentDrumKitName());
-        MidiEventmanager midiEventmanager = MidiEventmanager.getInstance();
+        midiEventmanager = MidiEventmanager.getInstance();
+        midiDeviceManager = MidiDeviceManager.getInstance();
+        midiDeviceManager.setCurrentMidiDevice(settings.getMidiDeviceName());
 
         while(true){
             log.info("Start the loop");

@@ -10,27 +10,47 @@ import java.util.stream.Collectors;
 public class MidiDeviceManager {
 
     private final Logger log = Logger.getLogger(this.getClass().getName());
-    private static MidiDevice.Info[] midiDevices;
-    private final Map<String,MidiDevice> midiDeviceList = new HashMap<>();
+    private final Map<String, MidiDevice> midiDeviceList = new HashMap<>();
     private static MidiDeviceManager instance = null;
+    private MidiDevice currentMidiDevice;
 
     private MidiDeviceManager() throws MidiUnavailableException {
         log.debug("Load MidiDeviceManager()");
-        midiDevices = MidiSystem.getMidiDeviceInfo();
-        for(MidiDevice.Info midiDevInfo : midiDevices)midiDeviceList.put(midiDevInfo.getName(),MidiSystem.getMidiDevice(midiDevInfo));
+        MidiDevice.Info[] midiDevices = MidiSystem.getMidiDeviceInfo();
+
+        for (MidiDevice.Info midiDevInfo : midiDevices) {
+            log.debug("Examine "+midiDevInfo.getName()+" "+midiDevInfo.getDescription());
+            MidiDevice midiDevice = MidiSystem.getMidiDevice(midiDevInfo);
+            if (midiDevice.getMaxTransmitters() != 0) {
+                midiDeviceList.put(midiDevInfo.getName(), MidiSystem.getMidiDevice(midiDevInfo));
+                log.info("Add midi transmitter "+midiDevInfo.getName()+" "+midiDevInfo.getDescription());
+            }
+        }
 
     }
 
     public static MidiDeviceManager getInstance() throws MidiUnavailableException {
-        if(instance == null) instance = new MidiDeviceManager();
+        if (instance == null) instance = new MidiDeviceManager();
         return instance;
     }
 
-    public List<String> getNamesOfMidiDevices(){
-       return Arrays.stream(midiDevices).map(MidiDevice.Info::getName).collect(Collectors.toList());
+    public List<String> getNamesOfMidiDevices() {
+        return midiDeviceList.entrySet()
+                .stream()
+                .map(V -> V.getValue()
+                        .getDeviceInfo()
+                        .getName())
+                .collect(Collectors.toList());
     }
 
-    public Optional<MidiDevice> getMidiDeviceByName(String name){
-        return Optional.ofNullable(midiDeviceList.get(name));
+    public void setCurrentMidiDevice(String name){
+        if(midiDeviceList.containsKey(name)){
+            currentMidiDevice = midiDeviceList.get(name);
+            log.info("Midi device is set to "+ name);
+        }
+    }
+
+    public Optional<MidiDevice> getCurrentMidiDevice(){
+        return Optional.ofNullable(currentMidiDevice);
     }
 }

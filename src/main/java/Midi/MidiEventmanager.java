@@ -15,24 +15,13 @@ public class MidiEventmanager {
     private String status = "uninitialized";
     private static MidiEventmanager instance;
     private Transmitter transmitter;
+    private MidiDevice midiDevice;
+    private MidiDeviceManager midiDeviceManager = MidiDeviceManager.getInstance();
 
     private MidiEventmanager() throws IOException, MidiUnavailableException {
         log.info("Start MidiEventmanager()");
-        MidiDeviceManager midiDeviceManager = MidiDeviceManager.getInstance();
-        Settings settings = Settings.getInstance();
-        Optional<MidiDevice> midiDevice = midiDeviceManager.getMidiDeviceByName(settings.getMidiDeviceName());
-        if (midiDevice.isPresent()) {
-            midiDevice.get().open();
-            if (midiDevice.get().getMaxTransmitters() > 0) {
-                transmitter = midiDevice.get().getTransmitter();
-                MidiEventReactor mer = new MidiEventReactor();
-                transmitter.setReceiver(mer.getReceiver());
-                status = "initialized and ready to receive messages";
-            } else {
-                log.warn("This midi device has no tranmitter");
-                status = "unable to receive messages";
-            }
-        }
+        connectToMidiDevice();
+
     }
 
     public static MidiEventmanager getInstance() throws IOException, MidiUnavailableException {
@@ -41,11 +30,25 @@ public class MidiEventmanager {
         return instance;
     }
 
+    private void connectToMidiDevice() throws MidiUnavailableException {
+        Optional<MidiDevice> newMidiDevice = midiDeviceManager.getCurrentMidiDevice();
+        if (newMidiDevice.isPresent()) {
+            midiDevice = newMidiDevice.get();
+            midiDevice.open();
+            transmitter = midiDevice.getTransmitter();
+            MidiEventReactor mer = new MidiEventReactor();
+            transmitter.setReceiver(mer.getReceiver());
+            status = "initialized and ready to receive messages";
+            log.info("openend "+midiDevice.getDeviceInfo().getName());
+        }
+    }
+
+
     public String getStatus() {
         return status;
     }
 
-    public Transmitter getTransmitter(){
+    public Transmitter getTransmitter() {
         return transmitter;
     }
 }
