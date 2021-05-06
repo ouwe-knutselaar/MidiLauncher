@@ -1,24 +1,31 @@
 
-D
-java:S2189""Add an end condition to this loop.(˜ïˆÿÿÿÿÿ8æŠÚì“/
 7
 java:S1220""Move this file to a named package.8æŠÚì“/
-J
-java:S1128"-Remove this unused import 'audio.WaveSample'.(Ã±­»8æŠÚì“/
+P
+java:S1128"3Remove this unused import 'Midi.MidiDeviceManager'.(ã¦8ÍØµˆ”/
+k
+java:S1128"NRemove this unused import 'javax.sound.sampled.UnsupportedAudioFileException'.(“èñó8æŠÚì“/
+O
+java:S1128"2Remove this unused import 'Midi.MidiEventReactor'.(íÓÿ8æŠÚì“/
+D
+java:S2189""Add an end condition to this loop.(˜ïˆÿÿÿÿÿ8æŠÚì“/
+¥
+java:S1130"‚Remove the declaration of thrown exception 'javax.sound.midi.MidiUnavailableException', as it cannot be thrown from method's body.(Èıé¦úÿÿÿÿ8ÍØµˆ”/
+L
+java:S1128"0Remove this unused import 'telnet.TelnetServer'.(¼Å¨ 8æŠÚì“/
+c
+java:S2142"FEither re-interrupt this method or rethrow the "InterruptedException".(ä ¹€8æŠÚì“/
 R
 java:S1128"0Remove this unused import 'audio.SampleManager'.(àç®Èÿÿÿÿÿ8æŠÚì“/
 k
-java:S1128
-"IRemove this unused import 'javax.sound.sampled.LineUnavailableException'.(¢£ƒÙşÿÿÿÿ8æŠÚì“/
-P
-java:S1128"3Remove this unused import 'Midi.MidiDeviceManager'.(ã¦8æŠÚì“/
-k
-java:S1128"NRemove this unused import 'javax.sound.sampled.UnsupportedAudioFileException'.(“èñó8æŠÚì“/
-O
-java:S1128"2Remove this unused import 'Midi.MidiEventReactor'.(íÓÿ8æŠÚì“/
+java:S1128"IRemove this unused import 'javax.sound.sampled.LineUnavailableException'.(¢£ƒÙşÿÿÿÿ8æŠÚì“/
+V
+java:S1128"4Remove this unused import 'telnet.TelnetServerTest'.(Äõ‘Øøÿÿÿÿ8ùÉ®ˆ”/
+J
+java:S1128"-Remove this unused import 'audio.WaveSample'.(Ã±­»8æŠÚì“/
+L
+java:S1128"/Remove this unused import 'telnet.MidiMonitor'.(Ÿï›±8ÍØµˆ”/
 O
 java:S1128"2Remove this unused import 'Midi.MidiEventmanager'.(ÿõ¸8æŠÚì“/
-L
-java:S1128"0Remove this unused import 'telnet.TelnetServer'.(¼Å¨ 8æŠÚì“/
-c
-java:S2142"FEither re-interrupt this method or rethrow the "InterruptedException".(ä ¹€8æŠÚì“/
+
+java:S1130"lRemove the declaration of thrown exception 'java.io.IOException', as it cannot be thrown from method's body.(Èıé¦úÿÿÿÿ8ùÉ®ˆ”/

@@ -1,6 +1,5 @@
 package settings;
 
-import Midi.MidiDeviceManager;
 import directory.DirTools;
 import org.apache.log4j.Logger;
 import javax.sound.midi.MidiUnavailableException;
@@ -23,7 +22,6 @@ public class Settings {
     private String tcpPort = "3030";
 
     List<String> drumKits = new LinkedList<>();
-    List<String> midiDevices = new LinkedList<>();
 
     private Settings() {
 
@@ -46,7 +44,6 @@ public class Settings {
         loadConfigFile(configFile);
 
         loadDrumKits();
-        loadMidiDevices();
     }
 
 
@@ -66,13 +63,6 @@ public class Settings {
         log.debug("tcpPort is " + tcpPort);
 
         inputStream.close();
-    }
-
-    private void loadMidiDevices() throws MidiUnavailableException {
-        log.debug("Load midi devices");
-        midiDevices.addAll(MidiDeviceManager
-                .getInstance()
-                .getNamesOfMidiDevices());
     }
 
     private void recreateAndFile(String configFile) {

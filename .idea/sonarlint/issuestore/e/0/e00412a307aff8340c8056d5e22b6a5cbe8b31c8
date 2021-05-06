@@ -1,4 +1,12 @@
 
-j
-java:S2095"NUse try-with-resources or close this "MidiEventReactor" in a "finally" clause.(ş¬òQ8˜ŠÚì“/
 {	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(§ Öçÿÿÿÿÿ8˜ŠÚì“/
+P
+java:S1128".Remove this unused import 'settings.Settings'.(×Çïşÿÿÿÿ8®ˆ”‡”/
+
+java:S1130"qRemove the declaration of thrown exception 'java.io.IOException', as it cannot be thrown from constructor's body.(Ú·óñ8õí™‡”/
+j
+java:S2095'"NUse try-with-resources or close this "MidiEventReactor" in a "finally" clause.(ş¬òQ8ó’™‡”/
+^
+java:S3655,"<Call "newMidiDevice.isPresent()" before accessing the value.(Çã‘²ıÿÿÿÿ8¼½Õ‹”/
+{
+java:S1450"YRemove the "midiDevice" field and declare it as a local variable in the relevant methods.(² ¯Èûÿÿÿÿ8¼½Õ‹”/

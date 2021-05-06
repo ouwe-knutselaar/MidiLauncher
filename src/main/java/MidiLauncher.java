@@ -1,5 +1,5 @@
 import Midi.MidiDeviceManager;
-import Midi.MidiEventmanager;
+import Midi.MidiEventReactor;
 import audio.SampleManager;
 import org.apache.log4j.Logger;
 import settings.Settings;
@@ -13,7 +13,6 @@ public class MidiLauncher {
     private SampleManager sampleManager;
     private Settings settings;
     private MidiDeviceManager midiDeviceManager;
-    private MidiEventmanager midiEventmanager;
 
     public static void main(String [] argv){
 
@@ -36,9 +35,8 @@ public class MidiLauncher {
         configDirectory = configDirectory.replace('\\','/');
         log.info("Start Midilauncher");
         try{
-        settings = Settings.getInstance();
-        settings.init(configDirectory);
-        sampleManager = SampleManager.getInstance();
+            settings = Settings.getInstance();
+            settings.init(configDirectory);
     }catch (IOException | MidiUnavailableException e){
             e.printStackTrace();
             System.exit(1);
@@ -47,17 +45,19 @@ public class MidiLauncher {
 
     private void start() throws IOException, MidiUnavailableException {
 
+        sampleManager = SampleManager.getInstance();
+        settings.getDrumKits().forEach(drumKit -> log.info("available drum :"+drumKit));
+        log.info("Current drumikit "+settings.getCurrentDrumKitName());
+        sampleManager.loadFromSampleDirectory(settings.getSampleStore()+"/"+settings.getCurrentDrumKitName());
+
+        midiDeviceManager = MidiDeviceManager.getInstance();
+        midiDeviceManager.setCurrentMidiDevice(settings.getMidiDeviceName());
+        midiDeviceManager.addMidiEventReactor(new MidiEventReactor());
+
+
         TelnetServer telnetServer = new TelnetServer();
         Thread telnetServerThread = new Thread(telnetServer);
         telnetServerThread.start();
-
-        settings.getDrumKits().forEach(drumKit -> log.info("available drum :"+drumKit));
-        log.info("Current drumikit "+settings.getCurrentDrumKitName());
-
-        sampleManager.loadFromSampleDirectory(settings.getSampleStore()+"/"+settings.getCurrentDrumKitName());
-        midiEventmanager = MidiEventmanager.getInstance();
-        midiDeviceManager = MidiDeviceManager.getInstance();
-        midiDeviceManager.setCurrentMidiDevice(settings.getMidiDeviceName());
 
         while(true){
             log.info("Start the loop");

@@ -1,24 +1,25 @@
 import Midi.MidiDeviceManager;
 import Midi.MidiEventReactor;
-import Midi.MidiEventmanager;
-import audio.SampleManager;
-import audio.WaveSample;
-import telnet.TelnetServer;
-import telnet.TelnetServerTest;
+import settings.Settings;
 
 import javax.sound.midi.*;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.IOException;
 
 public class Test {
 
     public static void main(String [] argv) throws IOException, MidiUnavailableException {
 
-        TelnetServerTest telnetServer = new TelnetServerTest();
-        Thread telnetServerThread = new Thread(telnetServer);
-        telnetServerThread.start();
+        Settings settings = Settings.getInstance();
+        settings.init(argv[0]);
 
+        MidiDeviceManager midiDeviceManager = MidiDeviceManager.getInstance();
+        midiDeviceManager.setCurrentMidiDevice(settings.getMidiDeviceName());
+        MidiEventReactor midiEventReactor = new MidiEventReactor();
+        MidiDevice midiDevice = midiDeviceManager.getCurrentMidiDevice().get();
+        midiDevice.open();
+
+        Transmitter transmitter = midiDevice.getTransmitter();
+        transmitter.setReceiver(midiEventReactor.getReceiver());
 
         while(true){
             try {

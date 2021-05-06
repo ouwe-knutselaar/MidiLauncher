@@ -19,3 +19,7 @@ U
 %src/main/java/directory/DirTools.java,b\a\ba1218755195fa9af681a0be04ef462396f35dd7
 T
 $src/main/java/settings/Settings.java,4\4\44a4e02b2719f7a63877d67e8a5e3fe1232818cb
+V
+&src/main/java/telnet/TelnetServer.java,6\7\67f063d08ead24a87c33cb488f7c4692fbbe74f9
+U
+%src/main/java/telnet/MidiMonitor.java,1\d\1d3d26732c818ee25b59def72f57bf64cd36fd98

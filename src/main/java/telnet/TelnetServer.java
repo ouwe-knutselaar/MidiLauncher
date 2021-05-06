@@ -2,7 +2,6 @@ package telnet;
 
 
 import Midi.MidiDeviceManager;
-import Midi.MidiEventmanager;
 import audio.SampleManager;
 import org.apache.log4j.Logger;
 import settings.Settings;
@@ -25,7 +24,6 @@ public class TelnetServer implements Runnable {
     private PrintWriter pw;
     private Settings settings;
     private MidiDeviceManager midiDeviceManager;
-    private MidiEventmanager midiEventmanager;
     private SampleManager sampleManager;
     private MidiMonitor midiMonitor;
 
@@ -33,12 +31,9 @@ public class TelnetServer implements Runnable {
         settings = Settings.getInstance();
         midiDeviceManager = MidiDeviceManager.getInstance();
         sampleManager = SampleManager.getInstance();
-        midiEventmanager = MidiEventmanager.getInstance();
         log.info("Start telnet server at port " + settings.getIntTcpPort());
         serverSocket = new ServerSocket(settings.getIntTcpPort());
         midiMonitor = MidiMonitor.getInstance(pw);
-        Transmitter transmitter = midiEventmanager.getTransmitter();
-        if (midiMonitor != null && transmitter != null) transmitter.setReceiver(midiMonitor.getReceiver());
     }
 
 
@@ -49,13 +44,13 @@ public class TelnetServer implements Runnable {
             try {
                 clientSocket = serverSocket.accept();
                 HandleSession(clientSocket);
-            } catch (IOException e) {
+            } catch (IOException | MidiUnavailableException e) {
                 e.printStackTrace();
             }
         }
     }
 
-    private void HandleSession(Socket clientSocket) throws IOException {
+    private void HandleSession(Socket clientSocket) throws IOException, MidiUnavailableException {
 
         log.info("New session from " + clientSocket.getInetAddress().getHostAddress());
         // just for testing
@@ -70,7 +65,7 @@ public class TelnetServer implements Runnable {
         log.info("Session ended");
     }
 
-    private void MainScreen() throws IOException {
+    private void MainScreen() throws IOException, MidiUnavailableException {
         boolean loop = true;
         while (loop) {
             pw.println("");
@@ -148,7 +143,6 @@ public class TelnetServer implements Runnable {
         pw.println("Used samples:");
         sampleManager.getSamples().stream().map(fullPath -> Paths.get(fullPath).getFileName()).forEach(pw::println);
         pw.println("current midi device is:" + settings.getMidiDeviceName());
-        pw.println("midi event manager status:" + midiEventmanager.getStatus());
     }
 
     private String selectDrumKit() throws IOException {
@@ -167,7 +161,7 @@ public class TelnetServer implements Runnable {
         }
     }
 
-    private void selectMidiDevice() throws IOException {
+    private void selectMidiDevice() throws IOException, MidiUnavailableException {
         Map<String, String> workMap = getMapOfDevices(midiDeviceManager.getNamesOfMidiDevices());
         boolean loop = true;
         String response="";
@@ -186,6 +180,7 @@ public class TelnetServer implements Runnable {
             pw.println("invalid choice " + response);
         }
         settings.setMidiDeviceName(workMap.get(response));
+        midiDeviceManager.setCurrentMidiDevice(workMap.get(response));
         log.info("Midi device set to "+settings.getMidiDeviceName());
     }
 

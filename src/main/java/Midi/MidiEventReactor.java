@@ -8,7 +8,7 @@ import java.util.List;
 
 public class MidiEventReactor implements MidiDevice {
 
-    private boolean isOpen = false;
+    private boolean isOpen = true;
     private final SampleManager sm;
     private final Logger log = Logger.getLogger(this.getClass().getName());
 
@@ -18,12 +18,13 @@ public class MidiEventReactor implements MidiDevice {
         sm = SampleManager.getInstance();
     }
 
-    Receiver rc = new Receiver() {
+    private Receiver rc = new Receiver() {
 
         @Override
         public void send(MidiMessage message, long timeStamp) {
 
             ShortMessage sms = (ShortMessage) message;
+            log.info("- cmd" + sms.getCommand() + " d1:"  + sms.getData1() + " d2:" + sms.getData2()+" ch"+sms.getChannel());
             if (sms.getCommand() == 144) {
                 sm.playSample(sms.getData1());
             }

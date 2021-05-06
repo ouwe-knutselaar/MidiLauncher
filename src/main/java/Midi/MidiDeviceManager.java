@@ -43,14 +43,24 @@ public class MidiDeviceManager {
                 .collect(Collectors.toList());
     }
 
-    public void setCurrentMidiDevice(String name){
+    public void setCurrentMidiDevice(String name) throws MidiUnavailableException {
+        if(currentMidiDevice != null)currentMidiDevice.close();
         if(midiDeviceList.containsKey(name)){
             currentMidiDevice = midiDeviceList.get(name);
+            currentMidiDevice.open();
             log.info("Midi device is set to "+ name);
+        }else{
+            log.info("Cannot conect to "+ name);
         }
     }
 
     public Optional<MidiDevice> getCurrentMidiDevice(){
         return Optional.ofNullable(currentMidiDevice);
+    }
+
+    public void addMidiEventReactor(MidiDevice reactor) throws MidiUnavailableException {
+        log.info("Add reactor to midi device "+currentMidiDevice.getDeviceInfo().getName());
+        currentMidiDevice.getTransmitter().setReceiver(reactor.getReceiver());
+
     }
 }
