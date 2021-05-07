@@ -1,13 +1,19 @@
 
-}
-java:S1450"`Remove the "midiDeviceManager" field and declare it as a local variable in the relevant methods.(ÃÜï¤8øÉˆ‡”/
-D
-java:S2189B""Add an end condition to this loop.(˜ïˆÿÿÿÿÿ8æŠÚì“/
-P
-java:S1068"4Remove this unused "midiEventmanager" private field.(ÕşòH8ƒÊ†‡”/
-c
-java:S2142F"FEither re-interrupt this method or rethrow the "InterruptedException".(ä ¹€8æŠÚì“/
-{
-java:S1450"_Remove the "midiEventmanager" field and declare it as a local variable in the relevant methods.(ÕşòH8Áí†‡”/
+~
+java:S1450"\Remove the "sampleManager" field and declare it as a local variable in the relevant methods.( ­–õÿÿÿÿÿ8¹¸ó—”/
 7
 java:S1220""Move this file to a named package.8æŠÚì“/
+£
+java:S1186Y"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(÷ìöêùÿÿÿÿ8ÛÅü³”/
+£
+java:S1186O"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(¶ø“€üÿÿÿÿ8ÛÅü³”/
+D
+java:S2189?""Add an end condition to this loop.(˜ïˆÿÿÿÿÿ8æŠÚì“/
+H
+java:S1168K"+Return an empty collection instead of null.(¥¹ï8ÛÅü³”/
+c
+java:S2142C"FEither re-interrupt this method or rethrow the "InterruptedException".(ä ¹€8æŠÚì“/
+H
+java:S1168U"+Return an empty collection instead of null.(¥¹ï8ÛÅü³”/
+}
+java:S1450"`Remove the "midiDeviceManager" field and declare it as a local variable in the relevant methods.(ÃÜï¤8øÉˆ‡”/

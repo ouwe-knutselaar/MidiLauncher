@@ -1,6 +1,7 @@
 import Midi.MidiDeviceManager;
 import Midi.MidiEventReactor;
 import settings.Settings;
+import telnet.MidiLaunchController;
 
 import javax.sound.midi.*;
 import java.io.IOException;
@@ -30,6 +31,9 @@ public class Test {
         }
 
     }
+
+
+    public void Bagger(MidiLaunchController x){};
 
   }
 

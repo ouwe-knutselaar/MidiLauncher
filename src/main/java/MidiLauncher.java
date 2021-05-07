@@ -3,11 +3,13 @@ import Midi.MidiEventReactor;
 import audio.SampleManager;
 import org.apache.log4j.Logger;
 import settings.Settings;
-import telnet.TelnetServer;
+import telnet.MidiLaunchController;
+
 import javax.sound.midi.MidiUnavailableException;
 import java.io.IOException;
+import java.util.List;
 
-public class MidiLauncher {
+public class MidiLauncher implements MidiLaunchController {
 
     private static final Logger log = Logger.getLogger("MidiLancher");
     private SampleManager sampleManager;
@@ -55,9 +57,9 @@ public class MidiLauncher {
         midiDeviceManager.addMidiEventReactor(new MidiEventReactor());
 
 
-        TelnetServer telnetServer = new TelnetServer();
+       /* TelnetServer telnetServer = new TelnetServer();
         Thread telnetServerThread = new Thread(telnetServer);
-        telnetServerThread.start();
+        telnetServerThread.start();*/
 
         while(true){
             log.info("Start the loop");
@@ -69,4 +71,37 @@ public class MidiLauncher {
         }
     }
 
+    @Override
+    public List<String> getMidiDevices() {
+        return midiDeviceManager.getNamesOfMidiDevices();
+    }
+
+    @Override
+    public void setMidiDevice(String name) {
+        try {
+            midiDeviceManager.setCurrentMidiDevice(name);
+        } catch (MidiUnavailableException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public String getCurrentMidiDevice() {
+        return midiDeviceManager.getCurrentMidiDevice().get().getDeviceInfo().getName();
+    }
+
+    @Override
+    public List<String> getDrumKits() {
+        return null;
+    }
+
+    @Override
+    public void setDrumKit(String name) {
+
+    }
+
+    @Override
+    public String getCurrentDrumKit() {
+        return null;
+    }
 }

@@ -26,8 +26,10 @@ public class TelnetServer implements Runnable {
     private MidiDeviceManager midiDeviceManager;
     private SampleManager sampleManager;
     private MidiMonitor midiMonitor;
+    private MidiLaunchController midiLaunchController;
 
-    public TelnetServer() throws IOException, MidiUnavailableException {
+    public TelnetServer(MidiLaunchController controller) throws IOException, MidiUnavailableException {
+        midiLaunchController = controller;
         settings = Settings.getInstance();
         midiDeviceManager = MidiDeviceManager.getInstance();
         sampleManager = SampleManager.getInstance();
