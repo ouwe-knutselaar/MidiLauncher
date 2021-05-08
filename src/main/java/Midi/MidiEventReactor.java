@@ -25,7 +25,7 @@ public class MidiEventReactor implements MidiDevice {
 
             ShortMessage sms = (ShortMessage) message;
             log.info("- cmd" + sms.getCommand() + " d1:"  + sms.getData1() + " d2:" + sms.getData2()+" ch"+sms.getChannel());
-            if (sms.getCommand() == 144) {
+            if (sms.getCommand() == 144 && sms.getData2() !=0) {
                 sm.playSample(sms.getData1());
             }
         }
